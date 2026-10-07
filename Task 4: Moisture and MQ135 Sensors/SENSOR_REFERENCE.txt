@@ -1,0 +1,352 @@
+CAPACITIVE MOISTURE SENSOR — QUICK REFERENCE
+=============================================
+
+Wiring to ESP32:
+  VCC  --> 3.3V
+  GND  --> GND
+  AOUT --> GPIO36 (ADC0)
+
+ADC Settings:
+  Use analogSetAttenuation(ADC_11db) for full 0-3.3V range (12-bit, 0-4095)
+  Avoid ADC2 pins (GPIO0, GPIO2, GPIO15) if using Wi-Fi - they become unstable.
+
+How It Works:
+  The sensor outputs voltage inversely proportional to moisture.
+  Higher moisture = lower resistance = lower ADC reading.
+
+Typical ESP32 ADC Readings:
+  Dry soil/grain    -->  ~2500 to 4095  (high voltage, dry)
+  Damp grain        -->  ~1200 to 2500  (lower voltage, damp)
+  Fully submerged   -->  ~500 to 1200   (very wet)
+  In air (no soil)  -->  ~3000 to 4095  (maximum reading)
+
+Calibration Threshold:
+  A common dry/wet threshold is 1488 - values above = dry, below = wet.
+  Record your own values from dry and wet grain piles for calibration data.
+
+Sample Code:
+  ---
+  #define AOUT_PIN 36
+  #define THRESHOLD 1488
+
+  void setup() {
+    Serial.begin(9600);
+    analogSetAttenuation(ADC_11db);
+  }
+
+  void loop() {
+    int value = analogRead(AOUT_PIN);
+
+    Serial.print("Moisture: ");
+    Serial.print(value);
+    Serial.print("  --> ");
+    if (value > THRESHOLD)
+      Serial.println("DRY");
+    else
+      Serial.println("WET");
+
+    delay(500);
+  }
+  ---
+
+
+MQ135 AIR QUALITY SENSOR — QUICK REFERENCE
+==========================================
+
+Wiring to ESP32:
+  VCC  --> 5V
+  GND  --> GND
+  AO   --> GPIO34 (ADC0) - analog output
+  DO   --> GPIO2 (optional) - digital alarm output
+
+Pinout on Common Breakout Board:
+  VCC  --> 5V power (heater draws ~150 mA)
+  GND  --> Ground
+  AO   --> Analog voltage output (varies with gas concentration)
+  DO   --> Digital HIGH/LOW based on pot-adjusted threshold
+
+Warm-Up Times:
+  First use (burn-in):  24-48 hours of continuous power
+    - The metal-oxide layer needs time to stabilize.
+    - Without burn-in, readings drift downward steadily.
+  Each power-on:        1-3 minutes minimum to stabilize.
+  After warm-up, calibrate in clean air to establish a reference point.
+
+How It Works:
+  Internal heater keeps sensing element hot for gas oxidation.
+  Higher gas concentration (NH3, NOx, smoke, CO2, alcohols) =
+  lower resistance = higher analog voltage on AO pin.
+
+Typical Readings:
+  Clean air (after warm-up)    -->  low ADC, low voltage (baseline)
+  Breath (CO2) nearby          -->  medium spike
+  Ammonia / alcohol nearby     -->  high spike
+  Values are relative - no absolute ppm without calibration.
+
+Sample Code:
+  ---
+  const int aoPin = 34;
+  const int doPin = 2;
+
+  void setup() {
+    Serial.begin(9600);
+    pinMode(doPin, INPUT);
+    Serial.println("MQ-135 warming up... wait at least 1 minute.");
+    delay(120000);  // 2-minute delay for warm-up
+  }
+
+  void loop() {
+    int raw = analogRead(aoPin);
+    float volts = raw * 5.0 / 1023.0;
+
+    Serial.printf("Raw=%d  V=%.2f  DO=%d  ",
+                  raw, volts, digitalRead(doPin));
+    if (digitalRead(doPin) == LOW)
+      Serial.println("[ALARM]");
+    else
+      Serial.println("[OK]");
+
+    delay(500);
+  }
+  ---
+
+c
+q
+
+q
+
+
+
+cat > "Task 4: Moisture and MQ135 Sensors/SENSOR_REFERENCE.txt" << 'EOF'
+CAPACITIVE MOISTURE SENSOR — QUICK REFERENCE
+=============================================
+
+Wiring to ESP32:
+  VCC  --> 3.3V
+  GND  --> GND
+  AOUT --> GPIO36 (ADC0)
+
+ADC Settings:
+  Use analogSetAttenuation(ADC_11db) for full 0-3.3V range (12-bit, 0-4095)
+  Avoid ADC2 pins (GPIO0, GPIO2, GPIO15) if using Wi-Fi - they become unstable.
+
+How It Works:
+  The sensor outputs voltage inversely proportional to moisture.
+  Higher moisture = lower resistance = lower ADC reading.
+
+Typical ESP32 ADC Readings:
+  Dry soil/grain    -->  ~2500 to 4095  (high voltage, dry)
+  Damp grain        -->  ~1200 to 2500  (lower voltage, damp)
+  Fully submerged   -->  ~500 to 1200   (very wet)
+  In air (no soil)  -->  ~3000 to 4095  (maximum reading)
+
+Calibration Threshold:
+  A common dry/wet threshold is 1488 - values above = dry, below = wet.
+  Record your own values from dry and wet grain piles for calibration data.
+
+Sample Code:
+  ---
+  #define AOUT_PIN 36
+  #define THRESHOLD 1488
+
+  void setup() {
+    Serial.begin(9600);
+    analogSetAttenuation(ADC_11db);
+  }
+
+  void loop() {
+    int value = analogRead(AOUT_PIN);
+
+    Serial.print("Moisture: ");
+    Serial.print(value);
+    Serial.print("  --> ");
+    if (value > THRESHOLD)
+      Serial.println("DRY");
+    else
+      Serial.println("WET");
+
+    delay(500);
+  }
+  ---
+
+
+MQ135 AIR QUALITY SENSOR — QUICK REFERENCE
+==========================================
+
+Wiring to ESP32:
+  VCC  --> 5V
+  GND  --> GND
+  AO   --> GPIO34 (ADC0) - analog output
+  DO   --> GPIO2 (optional) - digital alarm output
+
+Pinout on Common Breakout Board:
+  VCC  --> 5V power (heater draws ~150 mA)
+  GND  --> Ground
+  AO   --> Analog voltage output (varies with gas concentration)
+  DO   --> Digital HIGH/LOW based on pot-adjusted threshold
+
+Warm-Up Times:
+  First use (burn-in):  24-48 hours of continuous power
+    - The metal-oxide layer needs time to stabilize.
+    - Without burn-in, readings drift downward steadily.
+  Each power-on:        1-3 minutes minimum to stabilize.
+  After warm-up, calibrate in clean air to establish a reference point.
+
+How It Works:
+  Internal heater keeps sensing element hot for gas oxidation.
+  Higher gas concentration (NH3, NOx, smoke, CO2, alcohols) =
+  lower resistance = higher analog voltage on AO pin.
+
+Typical Readings:
+  Clean air (after warm-up)    -->  low ADC, low voltage (baseline)
+  Breath (CO2) nearby          -->  medium spike
+  Ammonia / alcohol nearby     -->  high spike
+  Values are relative - no absolute ppm without calibration.
+
+Sample Code:
+  ---
+  const int aoPin = 34;
+  const int doPin = 2;
+
+  void setup() {
+    Serial.begin(9600);
+    pinMode(doPin, INPUT);
+    Serial.println("MQ-135 warming up... wait at least 1 minute.");
+    delay(120000);  // 2-minute delay for warm-up
+  }
+
+  void loop() {
+    int raw = analogRead(aoPin);
+    float volts = raw * 5.0 / 1023.0;
+
+    Serial.printf("Raw=%d  V=%.2f  DO=%d  ",
+                  raw, volts, digitalRead(doPin));
+    if (digitalRead(doPin) == LOW)
+      Serial.println("[ALARM]");
+    else
+      Serial.println("[OK]");
+
+    delay(500);
+  }
+  ---
+
+c
+q
+
+q
+
+
+
+
+cat > "Task 4: Moisture and MQ135 Sensors/SENSOR_REFERENCE.txt" << 'EOF'
+CAPACITIVE MOISTURE SENSOR — QUICK REFERENCE
+=============================================
+
+Wiring to ESP32:
+  VCC  --> 3.3V
+  GND  --> GND
+  AOUT --> GPIO36 (ADC0)
+
+ADC Settings:
+  Use analogSetAttenuation(ADC_11db) for full 0-3.3V range (12-bit, 0-4095)
+  Avoid ADC2 pins (GPIO0, GPIO2, GPIO15) if using Wi-Fi - they become unstable.
+
+How It Works:
+  The sensor outputs voltage inversely proportional to moisture.
+  Higher moisture = lower resistance = lower ADC reading.
+
+Typical ESP32 ADC Readings:
+  Dry soil/grain    -->  ~2500 to 4095  (high voltage, dry)
+  Damp grain        -->  ~1200 to 2500  (lower voltage, damp)
+  Fully submerged   -->  ~500 to 1200   (very wet)
+  In air (no soil)  -->  ~3000 to 4095  (maximum reading)
+
+Calibration Threshold:
+  A common dry/wet threshold is 1488 - values above = dry, below = wet.
+  Record your own values from dry and wet grain piles for calibration data.
+
+Sample Code:
+  ---
+  #define AOUT_PIN 36
+  #define THRESHOLD 1488
+
+  void setup() {
+    Serial.begin(9600);
+    analogSetAttenuation(ADC_11db);
+  }
+
+  void loop() {
+    int value = analogRead(AOUT_PIN);
+
+    Serial.print("Moisture: ");
+    Serial.print(value);
+    Serial.print("  --> ");
+    if (value > THRESHOLD)
+      Serial.println("DRY");
+    else
+      Serial.println("WET");
+
+    delay(500);
+  }
+  ---
+
+
+MQ135 AIR QUALITY SENSOR — QUICK REFERENCE
+==========================================
+
+Wiring to ESP32:
+  VCC  --> 5V
+  GND  --> GND
+  AO   --> GPIO34 (ADC0) - analog output
+  DO   --> GPIO2 (optional) - digital alarm output
+
+Pinout on Common Breakout Board:
+  VCC  --> 5V power (heater draws ~150 mA)
+  GND  --> Ground
+  AO   --> Analog voltage output (varies with gas concentration)
+  DO   --> Digital HIGH/LOW based on pot-adjusted threshold
+
+Warm-Up Times:
+  First use (burn-in):  24-48 hours of continuous power
+    - The metal-oxide layer needs time to stabilize.
+    - Without burn-in, readings drift downward steadily.
+  Each power-on:        1-3 minutes minimum to stabilize.
+  After warm-up, calibrate in clean air to establish a reference point.
+
+How It Works:
+  Internal heater keeps sensing element hot for gas oxidation.
+  Higher gas concentration (NH3, NOx, smoke, CO2, alcohols) =
+  lower resistance = higher analog voltage on AO pin.
+
+Typical Readings:
+  Clean air (after warm-up)    -->  low ADC, low voltage (baseline)
+  Breath (CO2) nearby          -->  medium spike
+  Ammonia / alcohol nearby     -->  high spike
+  Values are relative - no absolute ppm without calibration.
+
+Sample Code:
+  ---
+  const int aoPin = 34;
+  const int doPin = 2;
+
+  void setup() {
+    Serial.begin(9600);
+    pinMode(doPin, INPUT);
+    Serial.println("MQ-135 warming up... wait at least 1 minute.");
+    delay(120000);  // 2-minute delay for warm-up
+  }
+
+  void loop() {
+    int raw = analogRead(aoPin);
+    float volts = raw * 5.0 / 1023.0;
+
+    Serial.printf("Raw=%d  V=%.2f  DO=%d  ",
+                  raw, volts, digitalRead(doPin));
+    if (digitalRead(doPin) == LOW)
+      Serial.println("[ALARM]");
+    else
+      Serial.println("[OK]");
+
+    delay(500);
+  }
+  ---
