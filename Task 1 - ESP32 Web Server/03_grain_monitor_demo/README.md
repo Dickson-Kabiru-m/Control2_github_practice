@@ -54,20 +54,15 @@ Browser:
 ### Screenshot 1: Arduino IDE verification and upload successful
 ![IDE verification successful](../images/03-demo-verification.png)
 
-
 ### Screenshot 2: Serial Monitor output
-
-
-![Serial Monitor output](images/03_serial_monitor.png)
+![Serial Monitor output](../images/03-demo-serial-output.png)
 
 ### Screenshot 3a: Browser showing the monitor page
 ![Broswer showing the monitor page](../images/03-demo-web.png)
 
 ### Screenshot 3b: Browser showing the JSON at /data
-> Insert screenshot here showing `http://<IP>/data` and the JSON text.
-> Save as `images/03_browser_data.png`
+![Browser showing JSON data](../images/03-demo-web-data.png)
 
-![Browser showing JSON data](images/03_browser_data.png)
 
 ## Next step
 Replace the three `read...()` functions with real sensor readings, for example an SHT31 for temperature and humidity and an NDIR sensor (such as the MH-Z19B or SCD41) for CO2.
