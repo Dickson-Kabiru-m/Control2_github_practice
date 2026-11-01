@@ -77,6 +77,6 @@ Sketches read the Wi-Fi name and password from a `secrets.h` file that git ignor
 
 | Sketch | What it proves | Tested | Screenshots added |
 |---|---|---|---|
-| 01_wifi_connect | The ESP32 joins Wi-Fi and gets an IP address | [x] | [x] |
+| 01_wifi_connect | The ESP32 joins Wi-Fi and gets an IP address | [X] | [x] |
 | 02_web_server | The ESP32 sends text wirelessly to a browser | [x] | [x] |
 | 03_grain_monitor_demo | The ESP32 serves a live data page and JSON | [x] | [x] |
