@@ -8,9 +8,7 @@
 ### How it connects to Wi-Fi
 - The ESP32 has a built-in Wi-Fi radio (2.4 GHz only, 802.11 b/g/n), so it needs no extra module.
 - In **Station (STA) mode** it joins your existing router or phone hotspot using the network name (SSID) and password. The router then gives it an **IP address** by DHCP.
-![ESP32 STATION MODE](image.png)
 - It can also run in **Access Point (AP) mode**, creating its own network. This is useful for a demo where no router is available.
-![ESP32 ACCESS POINT](images.png)
 - In Arduino code, the `WiFi.h` library does this with `WiFi.begin(ssid, password)`.
 - It will **not** connect to a 5 GHz-only network. If your hotspot is 5 GHz, switch it to 2.4 GHz.
 
