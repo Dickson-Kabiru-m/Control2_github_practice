@@ -1,0 +1,7 @@
+ARDUINO UNO AND ESP-32 CONNECTION AND VOLTAGE DIVIDER RULE
+ESP-32 and Arduino-uno are different types of microcontrollers. In a project that the two need to be connected for data transfer, we use the RX and TX pins. 
+
+We connect the RX of the ESP-32 to the TX of the Arduino and the TX  of the Arduino to RX of Arduino. Do not forget to connect their grounds for reference voltage.
+All the modules are to be connected to the Arduino uno and their data is to be transferred to ESP32 which will deal with pursing the data to the cloud with PUB/SUB architecture.
+VOLTAGE DIVIDER
+ESP-32 uses 3.3v and Arduino uses 5v. This 5v from Arduino is dangerous to the esp32 so we step it down to 3.3v using the voltage divider rule.
